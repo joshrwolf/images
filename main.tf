@@ -812,3 +812,14 @@ module "zot" {
   source            = "./images/zot"
   target_repository = "${var.target_repository}/zot"
 }
+
+locals {
+  images = {
+    "zot" = module.zot
+    // ... rest of the owl
+  }
+}
+
+output "images" {
+  value = { for name, image in local.images : name => image }
+}

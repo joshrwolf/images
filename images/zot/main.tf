@@ -52,3 +52,18 @@ module "tagger" {
     { for t in toset(concat(["latest"], module.version-tags.tag_list)) : "${t}-dev" => module.latest-dev.image_ref },
   )
 }
+
+output "images" {
+  value = {
+    "latest" = {
+      image_ref = module.latest.image_ref
+      config    = module.latest.config
+      tags      = { for k, v in module.tagger.oci_tags : k => v if !strcontains(k, "dev") } // This is stupid
+    }
+    "latest-dev" = {
+      image_ref = module.latest-dev.image_ref
+      config    = module.latest-dev.config
+      tags      = { for k, v in module.tagger.oci_tags : k => v if strcontains(k, "dev") } // This is stupid
+    }
+  }
+}

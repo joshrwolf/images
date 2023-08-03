@@ -34,3 +34,7 @@ resource "oci_tag" "this" {
     }
   }
 }
+
+output "oci_tags" {
+  value = { for k, v in oci_tag.this : k => v.tagged_ref }
+}
